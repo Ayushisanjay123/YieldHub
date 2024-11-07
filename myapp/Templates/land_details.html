@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ land.name }} Details</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <header>
+        <h1>{{ land.name }}</h1>
+        <nav>
+            <ul>
+                <li><a href="{% url 'index' %}">Home</a></li>
+                <li><a href="{% url 'land_list' %}">Land Listings</a></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <main>
+        <h2>Details</h2>
+        <p><strong>Location:</strong> {{ land.location }}</p>
+        <p><strong>Price:</strong> ${{ land.price }}</p>
+        <p><strong>Featured:</strong> {{ land.is_featured|yesno:"Yes,No" }}</p>
+        <!-- Add more fields as needed -->
+    </main>
+
+    <footer>
+        <p>&copy; {{ current_year }} Your Company. All rights reserved.</p>
+    </footer>
+</body>
+</html>

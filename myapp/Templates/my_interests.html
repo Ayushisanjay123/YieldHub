@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>My Interests</h1>
+{% if interests %}
+    <ul>
+        {% for interest in interests %}
+            <li>
+                <a href="{% url 'land_details' interest.land.id %}">{{ interest.land.name }}</a> 
+                - Expressed Interest on {{ interest.expressed_interest_date }}
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>You have not expressed any interests yet.</p>
+{% endif %}
+{% endblock %}

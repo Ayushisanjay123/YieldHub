@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="{% static 'css/admin_dashboard.css' %}"> <!-- Link to custom CSS -->
+</head>
+<body>
+    <!-- Admin Navigation Bar -->
+    <header>
+        <nav class="navbar">
+            <h1>Admin Dashboard</h1>
+            <ul>
+                <li><a href="{% url 'admin_dashboard' %}">Home</a></li>
+                <li><a href="{% url 'manage_users' %}">Manage Users</a></li>
+                <li><a href="{% url 'view_reports' %}">View Reports</a></li>
+                <li><a href="{% url 'settings' %}">Settings</a></li>
+                <li><a href="{% url 'logout' %}">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Dashboard Content -->
+    <main>
+        <section class="dashboard-section">
+            <h2>Welcome, Admin</h2>
+            <p>Use the sections below to manage the platform:</p>
+        </section>
+
+        <!-- Management Panels -->
+        <section class="panel-container">
+            <div class="panel">
+                <h3>Manage Users</h3>
+                <p>View, edit, or remove users on the platform.</p>
+                <a href="{% url 'manage_users' %}" class="btn">Go to User Management</a>
+            </div>
+
+            <div class="panel">
+                <h3>View Reports</h3>
+                <p>Access detailed reports on platform activity.</p>
+                <a href="{% url 'view_reports' %}" class="btn">View Reports</a>
+            </div>
+
+            <div class="panel">
+                <h3>Settings</h3>
+                <p>Update platform settings and configurations.</p>
+                <a href="{% url 'settings' %}" class="btn">Go to Settings</a>
+            </div>
+        </section>
+    </main>
+
+    <!-- Custom CSS for styling -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 1rem 0;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .navbar h1 {
+            font-size: 1.5rem;
+        }
+
+        .navbar ul {
+            list-style-type: none;
+            display: flex;
+            gap: 1rem;
+        }
+
+        .navbar ul li a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .dashboard-section {
+            text-align: center;
+            margin: 2rem 0;
+        }
+
+        .panel-container {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin: 2rem;
+        }
+
+        .panel {
+            background-color: #fff;
+            padding: 1.5rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            width: 300px;
+            text-align: center;
+        }
+
+        .panel h3 {
+            margin-top: 0;
+        }
+
+        .panel p {
+            color: #555;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background-color: #007bff;
+            color: #fff;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</body>
+</html>
