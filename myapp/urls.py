@@ -32,4 +32,6 @@ urlpatterns = [
     path('manage-listings/', manage_listings, name='manage_listings'),
     path('logout/', CustomLogoutView.as_view(), name='logout'),  # Only one logout path
     path('add-land-listing/', views.add_land_listing, name='add_land_listing'),
+    path('add_land_listing1/', views.add_land_listing1, name='add_land_listing1'),
+    path('land-listings/', views.land_listing_list, name='land_listing_list')
 ]

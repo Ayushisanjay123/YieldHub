@@ -210,6 +210,34 @@ def add_land_listing(request):
     return render(request, 'add_land_listing.html')
 
 
+def add_land_listing1(request):
+    if request.method == "POST":
+        land_name = request.POST.get('land_name')
+        location = request.POST.get('location')
+        size = request.POST.get('size')
+        soil_type = request.POST.get('soil_type')
+        water_availability = request.POST.get('water_availability')
+        image = request.FILES.get('image')
+        description = request.POST.get('description')
+
+        # Save data to the model
+        land_listing = LandListing(
+            owner=request.user,
+            land_name=land_name,
+            location=location,
+            size=size,
+            soil_type=soil_type,
+            water_availability=water_availability,
+            image=image,
+            description=description
+        )
+        land_listing.save()
+
+        return redirect('landowner_dashboard')  # Redirect to the dashboard or another page after saving
+    return render(request, 'add_land_listing.html')
+
+
+
 @login_required
 def manage_listings(request):
     # Get the Landowner instance for the logged-in user
@@ -239,3 +267,8 @@ def manage_listings(request):
         return redirect('manage_listings')  # Redirect to the same page after updating
 
     return render(request, 'manage_listings.html', {'listings': listings})
+
+
+def land_listing_list(request):
+    listings = LandListing.objects.all()
+    return render(request, 'viewland.html', {'listings': listings})

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import LandSeeker, Landowner, UserProfile, MyUser
+from .models import LandSeeker, Landowner, UserProfile, MyUser,LandListing
 
 class UserProfileInline(admin.StackedInline):
     model = UserProfile
@@ -50,4 +50,5 @@ class LandownerAdmin(admin.ModelAdmin):
 
 admin.site.register(MyUser, MyUserAdmin)
 admin.site.register(LandSeeker, LandSeekerAdmin)
-admin.site.register(Landowner, LandownerAdmin)
+admin.site.register(Landowner)
+admin.site.register(LandListing)

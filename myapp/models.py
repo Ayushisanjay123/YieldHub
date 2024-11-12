@@ -190,31 +190,51 @@ class FAQ(models.Model):
         ordering = ['question']
 
 # View to manage listings
-def manage_listings(request):
-    # Get the Landowner instance for the logged-in user
-    landowner = get_object_or_404(Landowner, user=request.user)
+# def manage_listings(request):
+#     # Get the Landowner instance for the logged-in user
+#     landowner = get_object_or_404(Landowner, user=request.user)
 
-    # Fetch the listings for the logged-in Landowner
-    listings = Land.objects.filter(landowner=landowner)
+#     # Fetch the listings for the logged-in Landowner
+#     listings = Land.objects.filter(landowner=landowner)
 
-    if request.method == 'POST':
-        # Handle the update of the land listing
-        listing_id = request.POST.get('listing_id')
-        land_name = request.POST.get('land_name')
-        location = request.POST.get('location')
-        size = request.POST.get('size')
-        soil_type = request.POST.get('soil_type')
-        water_availability = request.POST.get('water_availability') == 'on'
+#     if request.method == 'POST':
+#         # Handle the update of the land listing
+#         listing_id = request.POST.get('listing_id')
+#         land_name = request.POST.get('land_name')
+#         location = request.POST.get('location')
+#         size = request.POST.get('size')
+#         soil_type = request.POST.get('soil_type')
+#         water_availability = request.POST.get('water_availability') == 'on'
 
-        # Fetch the specific listing and update it
-        listing = get_object_or_404(Land, id=listing_id, landowner=landowner)
-        listing.name = land_name
-        listing.location = location
-        listing.size = size
-        listing.soil_type = soil_type
-        listing.water_availability = water_availability
-        listing.save()
+#         # Fetch the specific listing and update it
+#         listing = get_object_or_404(Land, id=listing_id, landowner=landowner)
+#         listing.name = land_name
+#         listing.location = location
+#         listing.size = size
+#         listing.soil_type = soil_type
+#         listing.water_availability = water_availability
+#         listing.save()
 
-        return redirect('manage_listings')  # Redirect to the same page after updating
+#         return redirect('manage_listings')  # Redirect to the same page after updating
 
-    return render(request, 'manage_listings.html', {'listings': listings})
+#     return render(request, 'manage_listings.html', {'listings': listings})
+
+
+from django.db import models
+from django.contrib.auth.models import User
+from django.utils import timezone
+
+class LandListing(models.Model):
+    owner = models.ForeignKey(MyUser, on_delete=models.CASCADE, related_name="land_listings",blank=True, null=True)
+    land_name = models.CharField(max_length=100)
+    location = models.CharField(max_length=100,blank=True, null=True)
+    size = models.DecimalField(max_digits=10, decimal_places=2, help_text="Size in acres or square meters",blank=True, null=True)
+    soil_type = models.CharField(max_length=50,blank=True, null=True)
+    water_availability =models.CharField(max_length=100)
+    image = models.ImageField(upload_to='land_images/', blank=True, null=True)
+    description = models.TextField(blank=True, null=True)
+    created_at = models.DateTimeField(default=timezone.now)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.land_name
