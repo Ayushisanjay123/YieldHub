@@ -1,137 +1,191 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    {% load static %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
-    <link rel="stylesheet" href="{% static 'css/admin_dashboard.css' %}"> <!-- Link to custom CSS -->
-</head>
-<body>
-    <!-- Admin Navigation Bar -->
-    <header>
-        <nav class="navbar">
-            <h1>Admin Dashboard</h1>
-            <ul>
-                <li><a href="{% url 'admin_dashboard' %}">Home</a></li>
-                <li><a href="{% url 'manage_users' %}">Manage Users</a></li>
-                <li><a href="{% url 'view_reports' %}">View Reports</a></li>
-                <li><a href="{% url 'settings' %}">Settings</a></li>
-                <li><a href="{% url 'logout' %}">Logout</a></li>
-            </ul>
-        </nav>
-    </header>
-
-    <!-- Dashboard Content -->
-    <main>
-        <section class="dashboard-section">
-            <h2>Welcome, Admin</h2>
-            <p>Use the sections below to manage the platform:</p>
-        </section>
-
-        <!-- Management Panels -->
-        <section class="panel-container">
-            <div class="panel">
-                <h3>Manage Users</h3>
-                <p>View, edit, or remove users on the platform.</p>
-                <a href="{% url 'manage_users' %}" class="btn">Go to User Management</a>
-            </div>
-
-            <div class="panel">
-                <h3>View Reports</h3>
-                <p>Access detailed reports on platform activity.</p>
-                <a href="{% url 'view_reports' %}" class="btn">View Reports</a>
-            </div>
-
-            <div class="panel">
-                <h3>Settings</h3>
-                <p>Update platform settings and configurations.</p>
-                <a href="{% url 'settings' %}" class="btn">Go to Settings</a>
-            </div>
-        </section>
-    </main>
-
-    <!-- Custom CSS for styling -->
+    <link rel="stylesheet" href="{% static 'css/admin_dashboard.css' %}">
     <style>
+        :root {
+            --primary-color: #6c5ce7;
+            --secondary-color: #a29bfe;
+            --text-color: #2d3436;
+            --bg-color: #dfe6e9;
+            --card-bg: #ffffff;
+            --border-color: #b2bec3;
+        }
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f6f9;
+            font-family: 'Roboto', sans-serif;
+            background: var(--bg-color);
             margin: 0;
+            display: flex;
+        }
+
+        /* Sidebar styles */
+        .sidebar {
+            width: 250px;
+            height: 100vh;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1em;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+        }
+
+        .sidebar h1 {
+            font-size: 1.5em;
+            margin-bottom: 1em;
+        }
+
+        .sidebar ul {
+            list-style: none;
             padding: 0;
+            margin: 0;
         }
 
-        header {
-            background-color: #333;
-            color: #fff;
-            padding: 1rem 0;
+        .sidebar ul li {
+            margin: 1em 0;
         }
 
+        .sidebar ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            padding: 0.5em 1em;
+            display: block;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+
+        .sidebar ul li a:hover {
+            background-color: var(--secondary-color);
+        }
+
+        /* Navbar styles */
         .navbar {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1em;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 1rem;
         }
 
         .navbar h1 {
-            font-size: 1.5rem;
+            margin: 0;
         }
 
         .navbar ul {
-            list-style-type: none;
+            list-style: none;
             display: flex;
-            gap: 1rem;
+            gap: 1em;
         }
 
-        .navbar ul li a {
-            color: #fff;
+        .navbar a {
+            color: white;
             text-decoration: none;
             font-weight: bold;
         }
 
-        .dashboard-section {
-            text-align: center;
-            margin: 2rem 0;
+        /* Main content area */
+        .main-content {
+            margin-left: 250px;
+            padding: 2em;
+            width: calc(100% - 250px);
         }
 
-        .panel-container {
+        /* Card styles */
+        .content {
             display: flex;
-            justify-content: center;
-            gap: 1.5rem;
-            margin: 2rem;
+            justify-content: space-between;
+            padding: 2em;
+            gap: 1em;
+            flex-wrap: wrap;
         }
 
-        .panel {
-            background-color: #fff;
-            padding: 1.5rem;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            width: 300px;
+        .card {
+            background: var(--card-bg);
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: calc(33.33% - 1em);
+            min-width: 250px;
+            padding: 20px;
             text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
 
-        .panel h3 {
-            margin-top: 0;
+        .card h2 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
         }
 
-        .panel p {
-            color: #555;
+        .card p {
+            color: var(--text-color);
         }
 
-        .btn {
-            display: inline-block;
-            padding: 0.5rem 1rem;
-            background-color: #007bff;
-            color: #fff;
-            border-radius: 4px;
+        .card a {
+            margin-top: 15px;
+            padding: 10px 20px;
+            background: var(--primary-color);
+            color: white;
             text-decoration: none;
+            border-radius: 5px;
             font-weight: bold;
+            transition: background 0.3s;
         }
 
-        .btn:hover {
-            background-color: #0056b3;
+        .card a:hover {
+            background: var(--secondary-color);
+        }
+
+        /* Responsive design for smaller screens */
+        @media (max-width: 768px) {
+            .card {
+                width: 100%;
+            }
         }
     </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h1>Admin Dashboard</h1>
+        <ul>
+            <li><a href="{% url 'admin_dashboard' %}">Dashboard Home</a></li>
+            <li><a href="{% url 'manage_users' %}">Manage Users</a></li>
+            <li><a href="{% url 'generate_reports' %}">Generate Reports</a></li>
+            <li><a href="{% url 'manage_communications' %}">Manage Communications</a></li>
+        </ul>
+    </div>
+
+    <div class="main-content">
+        <h2 class="content-title">Welcome to the Admin Dashboard</h2>
+        
+        <div class="content">
+            <div class="card">
+                <h2>Manage Users</h2>
+                <p>Approve or reject user registrations and oversee user activity.</p>
+                <a href="{% url 'manage_users' %}">Go to User Management</a>
+            </div>
+            <div class="card">
+                <h2>Platform Security</h2>
+                <p>Oversee platform security and functionality to ensure smooth operation.</p>
+                <a href="{% url 'platform_security' %}">Security Overview</a>
+            </div>
+            <div class="card">
+                <h2>Generate Reports</h2>
+                <p>Generate comprehensive reports with user and land details.</p>
+                <a href="{% url 'generate_reports' %}">View Reports</a>
+            </div>
+            <div class="card">
+                <h2>Manage Communication</h2>
+                <p>Manage communication between users if necessary.</p>
+                <a href="{% url 'manage_communications' %}">Manage Communications</a>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

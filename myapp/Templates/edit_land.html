@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block title %}Edit Land{% endblock %}
+{% block content %}
+<div class="container mt-4">
+    <h2>Edit Land</h2>
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="mb-3"><label>Title</label><input type="text" name="title" value="{{ land.title }}" class="form-control" required></div>
+        <div class="mb-3"><label>Location</label><input type="text" name="location" value="{{ land.location }}" class="form-control" required></div>
+        <div class="mb-3"><label>Size</label><input type="number" name="size" step="0.1" value="{{ land.size }}" class="form-control" required></div>
+        <div class="mb-3"><label>Price</label><input type="number" name="price" value="{{ land.price }}" class="form-control" required></div>
+        <div class="mb-3"><label>Description</label><textarea name="description" class="form-control">{{ land.description }}</textarea></div>
+        <div class="mb-3"><label>Image</label><input type="file" name="image" class="form-control"></div>
+        {% if land.image %}
+            <div class="mb-3"><img src="{{ land.image.url }}" width="150" class="img-thumbnail"></div>
+        {% endif %}
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+    </form>
+</div>
+{% endblock %}

@@ -1,12 +1,12 @@
 {% extends 'base.html' %}
 
-{% block title %}Login{% endblock %}
+{% block title %}Admin Login{% endblock %}
 
 {% block extra_css %}
 <style>
     :root {
-        --primary-color: #6c5ce7;
-        --secondary-color: #a29bfe;
+        --primary-color: #0984e3;
+        --secondary-color: #74b9ff;
         --text-color: #2d3436;
         --bg-color: #dfe6e9;
         --card-bg: #ffffff;
@@ -76,18 +76,24 @@
     .btn-login:hover {
         background: var(--secondary-color);
     }
-    .register-link, .admin-link {
+    .back-link {
         text-align: center;
         margin-top: 20px;
         font-size: 14px;
     }
-    .register-link a, .admin-link a {
+    .back-link a {
         color: var(--primary-color);
         text-decoration: none;
         font-weight: 600;
     }
-    .register-link a:hover, .admin-link a:hover {
+    .back-link a:hover {
         text-decoration: underline;
+    }
+    .error-message {
+        color: red;
+        font-size: 14px;
+        text-align: center;
+        margin-bottom: 15px;
     }
 </style>
 {% endblock %}
@@ -96,10 +102,16 @@
 <div class="login-container">
     <div class="login-card">
         <div class="login-header">
-            <h2>Welcome Back</h2>
+            <h2>Admin Login</h2>
         </div>
         <div class="login-body">
-            <form method="post" action="{% url 'login' %}">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="error-message">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+            <form action="{% url 'admin_login' %}" method="POST">
+
                 {% csrf_token %}
                 <div class="form-group">
                     <input type="text" id="email" name="email" class="form-control" placeholder="Email" required>
@@ -109,12 +121,8 @@
                 </div>
                 <button type="submit" class="btn-login">Log In</button>
             </form>
-            <div class="register-link">
-                Don't have an account? <a href="{% url 'register' %}">Sign up</a>
-            </div>
-            <div class="admin-link">
-                Are you an admin? <a href="{% url 'admin_login' %}">Log in here</a>
-
+            <div class="back-link">
+                Not an admin? <a href="{% url 'login' %}">Go back to user login</a>
             </div>
         </div>
     </div>

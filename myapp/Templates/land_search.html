@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Search Available Lands</h2>
+    <form method="get">
+        <input type="text" name="query" placeholder="Search by location..." class="form-control my-2">
+        <button type="submit" class="btn btn-primary">Search</button>
+    </form>
+
+    <h4 class="mt-4">Results:</h4>
+    <ul>
+        {% for land in lands %}
+            <li>{{ land.location }} - {{ land.size }} acres - {{ land.soil_type }}</li>
+        {% empty %}
+            <li>No matching lands found.</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Listed Lands</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+    <div class="container mt-5">
+        <h2 class="mb-4">My Listed Lands</h2>
+        {% if lands %}
+            <div class="row">
+                {% for land in lands %}
+                    <div class="col-md-6 col-lg-4 mb-4">
+                        <div class="card shadow-sm">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ land.title }}</h5>
+                                <p class="card-text"><strong>Location:</strong> {{ land.location }}</p>
+                                <p class="card-text"><strong>Size:</strong> {{ land.size }} acres</p>
+                                <p class="card-text"><strong>Price:</strong> ₹{{ land.price }}</p>
+                                <p class="card-text"><strong>Available:</strong> {{ land.available|yesno:"Yes,No" }}</p>
+
+                                <!-- 🔴 Delete Button Here -->
+                                <a href="{% url 'delete_land' land.id %}" class="btn btn-sm btn-danger mt-2">Delete</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="alert alert-info" role="alert">
+                You have not listed any lands yet.
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>

@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
 <div class="container mt-5">
-  <h2>Land Seeker Profile</h2>
+  <h2>Landowner Profile</h2>
   <div class="card p-4 shadow rounded">
     <div class="row">
       <div class="col-md-4">
@@ -14,8 +14,6 @@
         <p><strong>Address:</strong> {{ user.address }}</p>
         <p><strong>Pincode:</strong> {{ user.pincode }}</p>
         <p><strong>Gender:</strong> {{ user.gender }}</p>
-        <p><strong>Date of Birth:</strong> {{ landseeker.date_of_birth }}</p>
-        <p><strong>Agricultural Expanse ID:</strong> {{ landseeker.agricultural_expanse_id }}</p>
       </div>
     </div>
   </div>

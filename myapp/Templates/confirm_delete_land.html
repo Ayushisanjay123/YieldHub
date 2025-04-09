@@ -1,0 +1,18 @@
+<!-- templates/confirm_delete_land.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Delete Land</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+<div class="container mt-5">
+    <h3>Are you sure you want to delete <strong>{{ land.title }}</strong>?</h3>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Yes, Delete</button>
+        <a href="{% url 'view_my_lands' %}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+</body>
+</html>

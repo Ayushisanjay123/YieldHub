@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% block title %}Land Seeker Dashboard{% endblock %}
+
+{% block content %}
+<div class="card shadow-lg p-4 mb-5 bg-white rounded">
+    <h2 class="text-center mb-4 text-success">Land Seeker Dashboard</h2>
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover align-middle">
+            <tbody>
+                <tr>
+                    <th scope="row" class="w-25">Name</th>
+                    <td>{{ landseeker.first_name }} {{ landseeker.last_name }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Email</th>
+                    <td>{{ user.email }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Phone</th>
+                    <td>{{ landseeker.phone }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Gender</th>
+                    <td>{{ landseeker.gender }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Address</th>
+                    <td>{{ landseeker.address }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Photo</th>
+                    <td>
+                        {% if landseeker.photo %}
+                            <img src="{{ landseeker.photo.url }}" class="img-thumbnail shadow-sm" width="150" alt="Land Seeker Photo">
+                        {% else %}
+                            <span class="text-muted">No photo available</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row">Agricultural Expanse ID</th>
+                    <td>{{ landseeker.agricultural_expanse_id }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

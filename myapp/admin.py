@@ -1,53 +1,73 @@
 from django.contrib import admin
-from .models import LandSeeker, Landowner, UserProfile, MyUser
+from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
+from .models import (
+    MyUser, UserProfile, LandOwner, LandSeeker, Broker,
+    AgriculturalExpertise, Land, Interest, Agreement, Payment, Report
+)
 
-class UserProfileInline(admin.StackedInline):
-    model = UserProfile
-    can_delete = False
-    verbose_name_plural = 'User Profile'
-
-class MyUserAdmin(admin.ModelAdmin):
-    inlines = (UserProfileInline,)
+# Customizing User Admin
+class MyUserAdmin(BaseUserAdmin):
     list_display = ('email', 'first_name', 'last_name', 'is_active', 'is_staff')
+    list_filter = ('is_staff', 'is_superuser', 'is_active')
+    search_fields = ('email', 'first_name', 'last_name')
+    ordering = ('email',)
+    filter_horizontal = ()  # Prevents Django from looking for groups and permissions
 
-class LandSeekerAdmin(admin.ModelAdmin):
-    list_display = ('user_first_name', 'user_last_name', 'user_address', 'date_of_birth', 'user_gender', 'crop_requirements', 'desired_land_size')
+    fieldsets = (
+        (None, {'fields': ('email', 'password')}),
+        ('Personal Info', {'fields': ('first_name', 'last_name', 'phone', 'address', 'pincode', 'gender', 'photo')}),
+        ('Permissions', {'fields': ('is_active', 'is_staff', 'is_superuser')}),
+    )
 
-    def user_first_name(self, obj):
-        return obj.user.first_name
-    user_first_name.short_description = 'First Name'
-
-    def user_last_name(self, obj):
-        return obj.user.last_name
-    user_last_name.short_description = 'Last Name'
-
-    def user_address(self, obj):
-        return obj.user.userprofile.address
-    user_address.short_description = 'Address'
-
-    def user_gender(self, obj):
-        return obj.user.userprofile.gender
-    user_gender.short_description = 'Gender'
-
-class LandownerAdmin(admin.ModelAdmin):
-    list_display = ('user_first_name', 'user_last_name', 'user_address', 'contact_number', 'user_gender')
-
-    def user_first_name(self, obj):
-        return obj.user.first_name
-    user_first_name.short_description = 'First Name'
-
-    def user_last_name(self, obj):
-        return obj.user.last_name
-    user_last_name.short_description = 'Last Name'
-
-    def user_address(self, obj):
-        return obj.user.userprofile.address
-    user_address.short_description = 'Address'
-
-    def user_gender(self, obj):
-        return obj.user.userprofile.gender
-    user_gender.short_description = 'Gender'
+    add_fieldsets = (
+        (None, {
+            'classes': ('wide',),
+            'fields': ('email', 'first_name', 'last_name', 'password1', 'password2'),
+        }),
+    )
 
 admin.site.register(MyUser, MyUserAdmin)
-admin.site.register(LandSeeker, LandSeekerAdmin)
-admin.site.register(Landowner, LandownerAdmin)
+
+# Register all other models
+@admin.register(UserProfile)
+class UserProfileAdmin(admin.ModelAdmin):
+    list_display = ('user', 'role', 'phone', 'address', 'pincode')
+
+@admin.register(LandOwner)
+class LandOwnerAdmin(admin.ModelAdmin):
+    list_display = ('user',)
+
+@admin.register(LandSeeker)
+class LandSeekerAdmin(admin.ModelAdmin):
+    list_display = ('user', 'first_name', 'last_name', 'gender', 'agricultural_expertise')
+
+@admin.register(Broker)
+class BrokerAdmin(admin.ModelAdmin):
+    list_display = ('user', 'company_name')
+
+@admin.register(AgriculturalExpertise)
+class AgriculturalExpertiseAdmin(admin.ModelAdmin):
+    list_display = ('name',)
+
+@admin.register(Land)
+class LandAdmin(admin.ModelAdmin):
+    list_display = ('owner', 'location', 'size', 'water_availability', 'soil_type', 'is_available')
+    list_filter = ('is_available', 'soil_type')
+    search_fields = ('location',)
+
+@admin.register(Interest)
+class InterestAdmin(admin.ModelAdmin):
+    list_display = ('seeker', 'land', 'expressed_on')
+
+@admin.register(Agreement)
+class AgreementAdmin(admin.ModelAdmin):
+    list_display = ('land', 'landowner', 'landseeker', 'broker', 'start_date', 'end_date')
+
+@admin.register(Payment)
+class PaymentAdmin(admin.ModelAdmin):
+    list_display = ('agreement', 'amount', 'paid_on', 'payment_method')
+
+@admin.register(Report)
+class ReportAdmin(admin.ModelAdmin):
+    list_display = ('generated_by', 'generated_on')
+    search_fields = ('generated_by__email',)

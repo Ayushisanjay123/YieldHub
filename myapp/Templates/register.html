@@ -1,325 +1,186 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Register{% endblock %}
-
-{% block extra_css %}
-<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+{% block content %}
 <style>
     body {
-        font-family: 'Roboto', sans-serif;
-        background: linear-gradient(135deg, #f0f4f8 0%, #d9e2ec 100%);
-        color: #333;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        min-height: 100vh;
-        margin: 0;
-    }
-
-    .navbar {
-        background-color: #007bff;
-        color: white;
-        width: 100%;
-        padding: 15px 20px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-
-    .navbar a {
-        color: white;
-        text-decoration: none;
-        margin: 0 15px;
-        font-weight: 500;
-    }
-
-    .navbar a:hover {
-        text-decoration: underline;
+        background: linear-gradient(to right, #e0eafc, #cfdef3);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
     .container {
-        width: 100%;
-        max-width: 500px;
-        padding: 40px;
-        background: #fff;
-        border-radius: 12px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        margin-top: 20px;
-        margin-bottom: 60px;
-        transition: transform 0.3s ease;
+        max-width: 900px;
+        margin-top: 50px;
     }
 
-    .container:hover {
-        transform: translateY(-5px);
+    .card {
+        border-radius: 15px;
+        background-color: #ffffff;
+        border: none;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        padding: 30px;
     }
 
     h2 {
-        margin-bottom: 20px;
-        color: #007bff;
+        margin-bottom: 25px;
+        font-weight: bold;
         text-align: center;
+        color: #333;
     }
 
-    .form-group {
-        margin-bottom: 20px;
+    label {
+        font-weight: 500;
+        margin-top: 10px;
     }
 
-    .form-control {
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    input[type="tel"],
+    input[type="file"],
+    select,
+    textarea {
+        border-radius: 8px;
+        padding: 10px 12px;
+        margin-top: 5px;
         width: 100%;
-        padding: 12px;
-        border: 1px solid #ddd;
-        border-radius: 5px;
-        font-size: 15px;
-        background-color: #f9f9f9;
-        transition: border-color 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .form-control:focus {
-        border-color: #007bff;
-        box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
-        outline: none;
+        border: 1px solid #ccc;
+        box-sizing: border-box;
     }
 
     .btn-primary {
+        border-radius: 25px;
+        padding: 12px 40px;
+        font-weight: bold;
         background-color: #007bff;
         border: none;
-        color: white;
-        padding: 14px 18px;
-        font-size: 16px;
-        width: 100%;
-        border-radius: 5px;
-        cursor: pointer;
-        transition: background-color 0.3s ease, transform 0.3s ease;
+        transition: background-color 0.3s ease;
     }
 
     .btn-primary:hover {
         background-color: #0056b3;
-        transform: translateY(-2px);
-    }
-
-    .footer {
-        background-color: #343a40;
-        color: white;
-        text-align: center;
-        padding: 15px;
-        width: 100%;
-        position: fixed;
-        bottom: 0;
-        box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
-    }
-
-    .footer a {
-        color: #f1f1f1;
-        text-decoration: none;
-        margin: 0 10px;
-    }
-
-    .footer a:hover {
-        text-decoration: underline;
-    }
-
-    .is-invalid {
-        border-color: #dc3545;
     }
 
     .invalid-feedback {
-        color: #dc3545;
-        font-size: 12px;
+        color: red;
+        font-size: 0.85em;
+        display: none;
     }
 
-    #unregistered-message {
+    #password_error {
         display: none;
-        color: red;
-        margin-top: 10px;
+    }
+
+    .form-section {
+        margin-bottom: 20px;
+    }
+
+    .text-center {
         text-align: center;
     }
+
+    @media (max-width: 768px) {
+        .container {
+            padding: 0 15px;
+        }
+    }
 </style>
-{% endblock %}
-
-{% block content %}
-
 
 <div class="container">
-    <h2>Create an Account</h2>
-    <div id="unregistered-message">You are not registered yet. Please try again.</div>
-    <form id="registrationForm" method="post" action="{% url 'register' %}" enctype="multipart/form-data">
-        {% csrf_token %}
-        <div class="form-group">
-            <label for="first_name">First Name</label>
-            <input type="text" id="first_name" name="first_name" class="form-control" required pattern="[A-Za-z ]+"
-                title="First name must contain only letters and spaces.">
-            <div class="invalid-feedback" id="first_name_error"></div>
+    <div class="card">
+        <h2>Register</h2>
+        {% if error %}
+        <div class="alert alert-danger" role="alert">
+          {{ error }}
         </div>
-        <div class="form-group">
-            <label for="last_name">Last Name</label>
-            <input type="text" id="last_name" name="last_name" class="form-control" required pattern="[A-Za-z ]+"
-                title="Last name must contain only letters and spaces.">
-            <div class="invalid-feedback" id="last_name_error"></div>
-        </div>
-        <div class="form-group">
-            <label for="email">Email</label>
-            <input type="email" id="email" name="email" class="form-control" required>
-            <div class="invalid-feedback" id="email_error"></div>
-        </div>
-        <div class="form-group">
-            <label for="phone">Phone</label>
-            <input type="tel" id="phone" name="phone" class="form-control" required pattern="[0-9]{10}"
-                title="Phone number must be 10 digits long.">
-            <div class="invalid-feedback" id="phone_error"></div>
-        </div>
-        <div class="form-group">
-            <label for="address">Address</label>
-            <input type="text" id="address" name="address" class="form-control" required maxlength="255">
-            <div class="invalid-feedback" id="address_error">Address must be 255 characters or less.</div>
-        </div>
-        <div class="form-group">
-            <label for="pincode">Pincode</label>
-            <input type="text" id="pincode" name="pincode" class="form-control" required pattern="[0-9]{6}"
-                title="Pincode must be 6 digits long.">
-            <div class="invalid-feedback" id="pincode_error"></div>
-        </div>
-        <div class="form-group">
-            <label>Gender</label>
-            <div class="form-check">
-                <input type="radio" id="male" name="gender" value="male" class="form-check-input" required>
-                <label for="male" class="form-check-label">Male</label>
+        {% endif %}
+        <form method="POST" enctype="multipart/form-data" id="registerForm">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-md-6 form-section">
+                    <label for="first_name">First Name</label>
+                    <input type="text" name="first_name" id="first_name" required pattern="[A-Za-z ]+" class="form-control">
+                    <div class="invalid-feedback" id="first_name_error">Only letters allowed</div>
+                </div>
+
+                <div class="col-md-6 form-section">
+                    <label for="last_name">Last Name</label>
+                    <input type="text" name="last_name" id="last_name" required pattern="[A-Za-z ]+" class="form-control">
+                    <div class="invalid-feedback" id="last_name_error">Only letters allowed</div>
+                </div>
+
+                <div class="col-md-6 form-section">
+                    <label for="email">Email</label>
+                    <input type="email" name="email" id="email" required class="form-control">
+                </div>
+
+                <div class="col-md-6 form-section">
+                    <label for="phone">Phone</label>
+                    <input type="tel" name="phone" id="phone" required pattern="[0-9]{10}" class="form-control">
+                </div>
+
+                <div class="col-md-12 form-section">
+                    <label for="address">Address</label>
+                    <textarea name="address" id="address" required class="form-control"></textarea>
+                </div>
+
+                <div class="col-md-6 form-section">
+                    <label for="pincode">Pincode</label>
+                    <input type="text" name="pincode" id="pincode" required pattern="[0-9]{6}" class="form-control">
+                </div>
+
+                <div class="col-md-6 form-section">
+                    <label>Gender</label><br>
+                    <input type="radio" name="gender" value="Male" required> Male
+                    <input type="radio" name="gender" value="Female" style="margin-left: 10px;"> Female
+                </div>
+
+                <div class="col-md-6 form-section">
+                    <label for="password">Password</label>
+                    <input type="password" name="password" id="password" required minlength="6" class="form-control">
+                </div>
+
+                <div class="col-md-6 form-section">
+                    <label for="confirm_password">Confirm Password</label>
+                    <input type="password" name="confirm_password" id="confirm_password" required minlength="6" class="form-control">
+                    <div class="invalid-feedback" id="password_error">Passwords must match</div>
+                </div>
+
+                <div class="col-md-6 form-section">
+                    <label for="photo">Profile Photo</label>
+                    <input type="file" name="photo" id="photo" accept="image/*" class="form-control">
+                </div>
+
+                <div class="col-md-6 form-section">
+                    <label for="role">Role</label>
+                    <select name="role" id="role" required class="form-control">
+                        <option value="">Select Role</option>
+                        <option value="landowner">Land Owner</option>
+                        <option value="landseeker">Land Seeker</option>
+                        <option value="broker">Broker</option> 
+                    </select>
+                </div>
             </div>
-            <div class="form-check">
-                <input type="radio" id="female" name="gender" value="female" class="form-check-input" required>
-                <label for="female" class="form-check-label">Female</label>
+
+            <div class="text-center mt-4">
+                <button type="submit" class="btn btn-primary">Register</button>
             </div>
-            <div class="form-check">
-                <input type="radio" id="other" name="gender" value="other" class="form-check-input" required>
-                <label for="other" class="form-check-label">Other</label>
-            </div>
-            <div class="invalid-feedback" id="gender_error"></div>
-        </div>
-        <div class="form-group">
-            <label for="role">Role</label>
-            <select id="role" name="role" class="form-control" required>
-                <option value="">Select Role</option>
-                <option value="landowner">Landowner</option>
-                <option value="landseeker">Landseeker</option>
-            </select>
-            <div class="invalid-feedback" id="role_error"></div>
-        </div>
-        <div class="form-group">
-            <label for="password">Password</label>
-            <input type="password" id="password" name="password" class="form-control" required minlength="8"
-                title="Password must be at least 8 characters long.">
-            <div class="invalid-feedback" id="password_error"></div>
-        </div>
-        <div class="form-group">
-            <label for="confirm_password">Confirm Password</label>
-            <input type="password" id="confirm_password" name="confirm_password" class="form-control" required
-                minlength="8" title="Please confirm your password.">
-            <div class="invalid-feedback" id="confirm_password_error"></div>
-        </div>
-        <div class="form-group">
-            <label for="photo">Profile Photo</label>
-            <input type="file" id="photo" name="photo" class="form-control" accept="image/*">
-        </div>
-        <button type="submit" class="btn-primary">Register</button>
-    </form>
+        </form>
+    </div>
 </div>
 
-{% endblock %}
-
-{% block extra_js %}
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const form = document.getElementById('registrationForm');
-        const unregisteredMessage = document.getElementById('unregistered-message');
+document.getElementById('registerForm').addEventListener('submit', function (e) {
+    const password = document.getElementById('password');
+    const confirm = document.getElementById('confirm_password');
+    const passwordError = document.getElementById('password_error');
 
-        const validateField = (input) => {
-            const errorElement = document.getElementById(input.id + '_error');
-            let isValid = true;
-
-            if (input.type === 'radio') {
-                const genderSelected = document.querySelector('input[name="gender"]:checked');
-                if (!genderSelected) {
-                    errorElement.textContent = 'Please select a gender.';
-                    isValid = false;
-                } else {
-                    errorElement.textContent = '';
-                }
-            } else if (input.id === 'role') {
-                const roleSelected = document.getElementById('role').value;
-                if (!roleSelected) {
-                    errorElement.textContent = 'Please select a role.';
-                    isValid = false;
-                } else {
-                    errorElement.textContent = '';
-                }
-            } else if (input.id === 'password' || input.id === 'confirm_password') {
-                const password = document.getElementById('password').value;
-                const confirmPassword = document.getElementById('confirm_password').value;
-
-                if (input.id === 'password' && password.length < 8) {
-                    errorElement.textContent = 'Password must be at least 8 characters long.';
-                    isValid = false;
-                } else if (input.id === 'confirm_password' && confirmPassword !== password) {
-                    errorElement.textContent = 'Passwords do not match.';
-                    isValid = false;
-                } else {
-                    errorElement.textContent = '';
-                }
-            } else {
-                if (!input.checkValidity()) {
-                    errorElement.textContent = input.title;
-                    isValid = false;
-                } else {
-                    errorElement.textContent = '';
-                }
-            }
-
-            input.classList.toggle('is-invalid', !isValid);
-            return isValid;
-        };
-
-        document.querySelectorAll('.form-control').forEach(input => {
-            input.addEventListener('input', () => validateField(input));
-        });
-
-        document.querySelectorAll('input[name="gender"]').forEach(input => {
-            input.addEventListener('change', () => validateField(input));
-        });
-
-        form.addEventListener('submit', function (event) {
-            let isFormValid = true;
-            document.querySelectorAll('.form-control').forEach(input => {
-                if (!validateField(input)) {
-                    isFormValid = false;
-                }
-            });
-            const genderSelected = document.querySelector('input[name="gender"]:checked');
-            if (!validateField(genderSelected)) {
-                isFormValid = false;
-            }
-            if (!validateField(document.getElementById('role'))) {
-                isFormValid = false;
-            }
-
-            if (!isFormValid) {
-                event.preventDefault();
-            } else {
-                setTimeout(() => {
-                    const isRegistered = false; // Replace with your actual check
-                    if (!isRegistered) {
-                        unregisteredMessage.style.display = 'block';
-                    } else {
-                        const role = document.getElementById('role').value;
-                        if (role === 'landowner') {
-                            window.location.href = '/landowner-dashboard';
-                        } else if (role === 'landseeker') {
-                            window.location.href = '/landseeker-profile';
-                        }
-                    }
-                }, 1000);
-            }
-        });
-    });
+    if (password.value !== confirm.value) {
+        passwordError.style.display = 'block';
+        e.preventDefault();
+    } else {
+        passwordError.style.display = 'none';
+    }
+});
 </script>
 {% endblock %}
