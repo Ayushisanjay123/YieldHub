@@ -2,20 +2,23 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from .models import (
     MyUser, UserProfile, LandOwner, LandSeeker, Broker,
-    AgriculturalExpertise, Land, Interest, Agreement, Payment, Report
+    AgriculturalExpertise, Land, Interest, Agreement, Payment, Report,
+    LandListing
 )
 
-# Customizing User Admin
+# Customizing the User Admin
 class MyUserAdmin(BaseUserAdmin):
     list_display = ('email', 'first_name', 'last_name', 'is_active', 'is_staff')
     list_filter = ('is_staff', 'is_superuser', 'is_active')
     search_fields = ('email', 'first_name', 'last_name')
     ordering = ('email',)
-    filter_horizontal = ()  # Prevents Django from looking for groups and permissions
+    filter_horizontal = ()
 
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
-        ('Personal Info', {'fields': ('first_name', 'last_name', 'phone', 'address', 'pincode', 'gender', 'photo')}),
+        ('Personal Info', {
+            'fields': ('first_name', 'last_name', 'phone', 'address', 'pincode', 'gender', 'photo')
+        }),
         ('Permissions', {'fields': ('is_active', 'is_staff', 'is_superuser')}),
     )
 
@@ -28,7 +31,7 @@ class MyUserAdmin(BaseUserAdmin):
 
 admin.site.register(MyUser, MyUserAdmin)
 
-# Register all other models
+# Registering other models
 @admin.register(UserProfile)
 class UserProfileAdmin(admin.ModelAdmin):
     list_display = ('user', 'role', 'phone', 'address', 'pincode')
@@ -71,3 +74,8 @@ class PaymentAdmin(admin.ModelAdmin):
 class ReportAdmin(admin.ModelAdmin):
     list_display = ('generated_by', 'generated_on')
     search_fields = ('generated_by__email',)
+
+@admin.register(LandListing)
+class LandListingAdmin(admin.ModelAdmin):
+    list_display = ('land_name', 'location', 'size', 'soil_type', 'created_at')
+    search_fields = ('land_name', 'location')

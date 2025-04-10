@@ -1,9 +1,10 @@
-# models.py
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager,PermissionsMixin
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+from django.utils import timezone
 
+# ---------------------------------
 # Custom User Manager
-# --------------------------
+# ---------------------------------
 class MyUserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
         if not email:
@@ -19,10 +20,9 @@ class MyUserManager(BaseUserManager):
         extra_fields.setdefault('is_superuser', True)
         return self.create_user(email, password, **extra_fields)
 
-
-# --------------------------
+# ---------------------------------
 # Custom User Model
-# --------------------------
+# ---------------------------------
 class MyUser(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True)
     first_name = models.CharField(max_length=255, blank=True)
@@ -45,6 +45,9 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         return self.email
 
+# ---------------------------------
+# UserProfile
+# ---------------------------------
 class UserProfile(models.Model):
     ROLE_CHOICES = (
         ('landowner', 'Land Owner'),
@@ -62,7 +65,6 @@ class UserProfile(models.Model):
 
 class LandOwner(models.Model):
     user = models.OneToOneField(MyUser, on_delete=models.CASCADE, primary_key=True)
-
 
     def __str__(self):
         return f"{self.user.first_name} {self.user.last_name}"
@@ -95,6 +97,9 @@ class Land(models.Model):
     water_availability = models.BooleanField(default=False)
     soil_type = models.CharField(max_length=100)
     is_available = models.BooleanField(default=True)
+    image = models.ImageField(upload_to='land_images/', blank=True, null=True)
+    price = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    description = models.TextField(blank=True, null=True)
 
     def __str__(self):
         return self.location
@@ -103,6 +108,12 @@ class Interest(models.Model):
     land = models.ForeignKey(Land, on_delete=models.CASCADE)
     seeker = models.ForeignKey(LandSeeker, on_delete=models.CASCADE)
     expressed_on = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(max_length=20, default='pending', choices=[
+        ('pending', 'Pending'),
+        ('accepted', 'Accepted'),
+        ('rejected', 'Rejected'),
+        ('facilitated', 'Facilitated')
+    ])
 
     def __str__(self):
         return f"{self.seeker.user.email} interested in {self.land.location}"
@@ -142,3 +153,32 @@ class Report(models.Model):
 
     def __str__(self):
         return f"Report by {self.generated_by.email} on {self.generated_on}"
+
+class Testimonial(models.Model):
+    name = models.CharField(max_length=255)
+    feedback = models.TextField()
+
+    def __str__(self):
+        return self.name
+
+class FAQ(models.Model):
+    question = models.CharField(max_length=255)
+    answer = models.TextField()
+
+    def __str__(self):
+        return self.question
+
+class LandListing(models.Model):
+    owner = models.ForeignKey(MyUser, on_delete=models.CASCADE, related_name="land_listings", blank=True, null=True)
+    land_name = models.CharField(max_length=100)
+    location = models.CharField(max_length=100, blank=True, null=True)
+    size = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    soil_type = models.CharField(max_length=50, blank=True, null=True)
+    water_availability = models.CharField(max_length=100)
+    image = models.ImageField(upload_to='land_images/', blank=True, null=True)
+    description = models.TextField(blank=True, null=True)
+    created_at = models.DateTimeField(default=timezone.now)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.land_name

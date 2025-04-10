@@ -1,37 +1,39 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>My Listed Lands</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body class="bg-light">
-    <div class="container mt-5">
-        <h2 class="mb-4">My Listed Lands</h2>
-        {% if lands %}
+{% extends 'base.html' %}
+{% block title %}My Listed Lands{% endblock %}
+{% block content %}
+<div class="container mt-4">
+    <h2>My Listed Lands</h2>
             <div class="row">
                 {% for land in lands %}
-                    <div class="col-md-6 col-lg-4 mb-4">
-                        <div class="card shadow-sm">
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                {% if land.image %}
+                <img src="{{ land.image.url }}" class="card-img-top" alt="Land Image">
+                {% else %}
+                <div class="card-img-top bg-light text-center py-3">No Image Available</div>
+                {% endif %}
                             <div class="card-body">
-                                <h5 class="card-title">{{ land.title }}</h5>
-                                <p class="card-text"><strong>Location:</strong> {{ land.location }}</p>
+                    <h5 class="card-title">{{ land.location }}</h5>
                                 <p class="card-text"><strong>Size:</strong> {{ land.size }} acres</p>
+                    <p class="card-text"><strong>Soil Type:</strong> {{ land.soil_type }}</p>
                                 <p class="card-text"><strong>Price:</strong> ₹{{ land.price }}</p>
-                                <p class="card-text"><strong>Available:</strong> {{ land.available|yesno:"Yes,No" }}</p>
-
-                                <!-- 🔴 Delete Button Here -->
-                                <a href="{% url 'delete_land' land.id %}" class="btn btn-sm btn-danger mt-2">Delete</a>
-                            </div>
-                        </div>
+                    <p class="card-text"><strong>Water Available:</strong> {{ land.water_availability|yesno:"Yes,No" }}</p>
+                    <p class="card-text"><strong>Available:</strong> {{ land.is_available|yesno:"Yes,No" }}</p>
+                    {% if land.description %}
+                    <p class="card-text"><strong>Description:</strong> {{ land.description }}</p>
+                    {% endif %}
+                    <div class="btn-group">
+                        <a href="{% url 'edit_land' land.id %}" class="btn btn-primary">Edit</a>
+                        <a href="{% url 'delete_land' land.id %}" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this land?')">Delete</a>
                     </div>
-                {% endfor %}
+                </div>
             </div>
-        {% else %}
-            <div class="alert alert-info" role="alert">
-                You have not listed any lands yet.
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <p>No lands listed yet.</p>
             </div>
-        {% endif %}
+        {% endfor %}
     </div>
-</body>
-</html>
+</div>
+{% endblock %}
